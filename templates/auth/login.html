@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* 1. Main Wrapper: Centers the box on the screen */
+    .login-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 80vh;
+        padding: 20px;
+    }
+    
+    /* 2. THE DARK PURPLE BOX */
+    .auth-box {
+        background-color: #4e2a8e; 
+        padding: 40px;
+        border-radius: 20px;       /* Slightly rounder to match header pills */
+        box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+        width: 100%;
+        max-width: 400px;          
+        text-align: center;
+    }
+
+    /* --- Typography --- */
+    .page-title {
+        color: white;
+        font-weight: 800;
+        font-size: 2.2rem;
+        margin-bottom: 25px;
+    }
+
+    /* --- Input Fields --- */
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.95); 
+        border: none;
+        padding: 14px;
+        border-radius: 10px;    /* Matches modern look */
+        margin-bottom: 20px; 
+        font-size: 1rem;
+        color: #333;
+    }
+    
+    .form-control:focus {
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(125, 78, 250, 0.5); /* Purple glow instead of green */
+        outline: none;
+    }
+
+    /* --- UPDATED: FORM SUBMIT BUTTON (Renamed to avoid Header conflict) --- */
+    .btn-form-submit {
+        width: 100%;
+        padding: 12px;
+        background-color: #7d4efa; /* Solid Purple to match Header Login */
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+    .btn-form-submit:hover {
+        background-color: #6633cc;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+
+    .register-link {
+        color: #ffc107; 
+        font-weight: bold;
+        text-decoration: none;
+    }
+    .register-link:hover {
+        color: white;
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-wrapper">
+    <div class="auth-box">
+        
+        <h2 class="page-title">Sign In</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show text-start" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <input type="text" name="username" class="form-control" placeholder="Username" required>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
+
+            <button type="submit" class="btn-form-submit shadow">Login</button>
+        </form>
+
+        <p class="mt-4 text-white">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="register-link">Register here</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

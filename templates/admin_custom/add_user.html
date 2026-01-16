@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 1. Modern Glassmorphism Wrapper */
+    .admin-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        padding: 40px 20px;
+    }
+    
+    /* 2. MODERN FLOATING CARD */
+    .admin-box {
+        background: rgba(78, 42, 142, 0.4); /* Translucent Purple */
+        backdrop-filter: blur(15px);        /* Frosted Glass effect */
+        -webkit-backdrop-filter: blur(15px);
+        padding: 50px 40px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 550px;
+        text-align: left;
+        transition: transform 0.3s ease;
+    }
+    
+    .admin-title {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 2rem;
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+        text-align: center;
+    }
+
+    .admin-subtitle {
+        color: #ffc107; 
+        margin-bottom: 35px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    
+    /* Modern Inputs */
+    .field-wrapper {
+        margin-bottom: 20px;
+    }
+    
+    .field-wrapper label {
+        color: #e0d4ff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        margin-left: 4px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* GENERAL INPUT STYLING */
+    .form-control, input {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 14px 18px;
+        border-radius: 12px;
+        width: 100%;
+        color: white !important;
+        font-weight: 400;
+        transition: all 0.3s ease;
+    }
+
+    /* --- DROPDOWN (SELECT) SPECIFIC FIX --- */
+    select {
+        appearance: none;       /* Removes default system arrow */
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-color: rgba(255, 255, 255, 0.08) !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        padding: 14px 18px;
+        border-radius: 12px;
+        width: 100%;
+        cursor: pointer;
+        /* Adds a custom white arrow */
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1em;
+    }
+
+    /* THE OPTIONS LIST (Dark Background) */
+    select option {
+        background-color: #1a1a2e !important; /* Dark Purple Background */
+        color: white !important;
+        padding: 12px;
+    }
+
+    /* Focus States */
+    .form-control:focus, select:focus {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: #ffc107 !important; 
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+        outline: none;
+    }
+
+    /* Modern Action Button */
+    .btn-admin-submit {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(45deg, #ffc107, #ff9800); 
+        color: #1a1a2e;
+        border: none;
+        border-radius: 14px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        margin-top: 25px;
+        transition: all 0.3s shadow;
+        box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .btn-admin-submit:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 25px rgba(255, 193, 7, 0.4);
+    }
+
+    .back-link {
+        color: rgba(255, 255, 255, 0.6);
+        font-weight: 600;
+        text-decoration: none;
+        transition: color 0.2s;
+        display: block;
+        text-align: center;
+        margin-top: 25px;
+    }
+    .back-link:hover { color: #ffc107; }
+    
+    .help-text-styled {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.75rem;
+        margin-top: 8px;
+        display: block;
+    }
+</style>
+
+<div class="admin-wrapper">
+    <div class="admin-box">
+        <h2 class="admin-title">Add New User</h2>
+        <p class="admin-subtitle">Secure Admin Mode</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="field-wrapper">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    
+                    {% if field.help_text %}
+                        <small class="help-text-styled">{{ field.help_text|safe }}</small>
+                    {% endif %}
+
+                    {% if field.errors %}
+                        <div class="text-danger small mt-2 fw-bold" style="color: #ff4d4d !important;">
+                            ⚠️ {{ field.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-admin-submit">Finalize & Create</button>
+        </form>
+
+        <a href="{% url 'admin_dashboard' %}" class="back-link">
+            ← Return to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+    // Automatically apply classes to inputs (including Select)
+    document.querySelectorAll('input, select').forEach(function(el) {
+        el.classList.add('form-control');
+    });
+</script>
+{% endblock %}

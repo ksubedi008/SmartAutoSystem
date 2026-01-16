@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    /* 1. Modern Glassmorphism Wrapper */
+    .auth-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 90vh;
+        background: radial-gradient(circle at top right, #2d1b4d, #1a1a2e); /* Subtle depth */
+        padding: 40px 20px;
+    }
+    
+    /* 2. MODERN FLOATING CARD */
+    .auth-box {
+        background: rgba(78, 42, 142, 0.4); /* Translucent Purple */
+        backdrop-filter: blur(15px);        /* Frosted Glass effect */
+        -webkit-backdrop-filter: blur(15px);
+        padding: 50px 40px;
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        transition: transform 0.3s ease;
+    }
+
+    .auth-box:hover {
+        transform: translateY(-5px);
+    }
+    
+    /* Typography */
+    .page-title {
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 2.2rem;
+        letter-spacing: -1px;
+        margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+        color: #b8a6ff; /* Soft lavender */
+        margin-bottom: 35px;
+        font-size: 1rem;
+        font-weight: 500;
+    }
+    
+    /* Modern Inputs */
+    .field-wrapper {
+        margin-bottom: 20px;
+        text-align: left;
+    }
+    
+    .field-wrapper label {
+        color: #e0d4ff;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 8px;
+        margin-left: 4px;
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .form-control {
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 2px solid rgba(255, 255, 255, 0.1) !important;
+        padding: 14px 18px;
+        border-radius: 12px;
+        width: 100%;
+        color: white !important;
+        font-weight: 400;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.15) !important;
+        border-color: #ffc107 !important; /* Yellow border on focus */
+        box-shadow: 0 0 15px rgba(255, 193, 7, 0.2);
+        outline: none;
+    }
+
+    /* Eye Icon Styling */
+    .input-group-wrapper {
+        position: relative;
+    }
+
+    .password-toggle-icon {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #ffc107; /* Yellow Eye Icon */
+        transition: opacity 0.2s;
+    }
+
+    .password-toggle-icon:hover {
+        opacity: 0.7;
+    }
+
+    /* Modern Action Button */
+    .btn-register {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(45deg, #ffc107, #ff9800); /* Gradient Yellow */
+        color: #1a1a2e;
+        border: none;
+        border-radius: 14px;
+        font-size: 1.1rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        cursor: pointer;
+        margin-top: 15px;
+        transition: all 0.3s shadow;
+        box-shadow: 0 10px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .btn-register:hover {
+        transform: scale(1.02);
+        box-shadow: 0 15px 25px rgba(255, 193, 7, 0.4);
+        background: linear-gradient(45deg, #ffca2c, #ffb300);
+    }
+
+    .login-link {
+        color: #ffc107;
+        font-weight: 700;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+
+    .login-link:hover {
+        color: #ffffff;
+        text-decoration: underline;
+    }
+
+    /* Custom Scrollbar for the card if it gets too long */
+    .auth-box {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .auth-box::-webkit-scrollbar { width: 5px; }
+    .auth-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+</style>
+
+<div class="auth-wrapper">
+    <div class="auth-box">
+        <h2 class="page-title">Join Us</h2>
+        <p class="page-subtitle">Start your journey with Smart Auto</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="field-wrapper">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="input-group-wrapper">
+                        {# We manually add the form-control class to Django's field #}
+                        {{ field }}
+                        
+                        {% if 'password' in field.name %}
+                        <span class="password-toggle-icon" onclick="togglePassword('{{ field.auto_id }}', this)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        </span>
+                        {% endif %}
+                    </div>
+
+                    {% if field.errors %}
+                        <div class="text-danger small mt-2 fw-bold" style="color: #ff4d4d !important;">
+                             {{ field.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-register">Create Account</button>
+        </form>
+
+        <p class="mt-4 text-white-50">
+            Already a member? <a href="{% url 'login' %}" class="login-link">Sign In</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    // Ensure all Django fields have the form-control class for modern styling
+    document.querySelectorAll('input, select, textarea').forEach(function(el) {
+        el.classList.add('form-control');
+    });
+
+    function togglePassword(fieldId, iconSpan) {
+        var input = document.getElementById(fieldId);
+        const eyeSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+        const eyeOffSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>';
+
+        if (input.type === "password") {
+            input.type = "text";
+            iconSpan.innerHTML = eyeOffSvg; 
+        } else {
+            input.type = "password";
+            iconSpan.innerHTML = eyeSvg; 
+        }
+    }
+</script>
+{% endblock %}

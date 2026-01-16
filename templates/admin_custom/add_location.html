@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* Custom Dark Purple Container */
+    .admin-form-box {
+        background-color: #4e2a8e; /* Matches your theme */
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        max-width: 500px;
+        margin: 40px auto; /* Centers the box */
+    }
+
+    /* Target the input field specifically */
+    .admin-form-box input[type="text"] {
+        width: 100%;
+        padding: 12px;
+        border-radius: 5px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
+        color: #333;
+        font-size: 1rem;
+    }
+
+    /* Focus effect */
+    .admin-form-box input[type="text"]:focus {
+        background-color: #ffffff;
+        outline: none;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    }
+
+    .custom-hr {
+        border-color: rgba(255, 255, 255, 0.3);
+        margin-bottom: 25px;
+    }
+</style>
+
+<div class="container">
+    <div class="admin-form-box">
+        <h3 class="text-center fw-bold"> Add New Location</h3>
+        <hr class="custom-hr">
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+                <label class="fw-bold mb-2">Location Name</label>
+                {{ form.name }}
+            </div>
+            
+            <button type="submit" class="btn btn-warning w-100 fw-bold shadow btn-lg">
+                Save Location
+            </button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'admin_dashboard' %}" class="text-white text-decoration-none fw-bold">
+                ← Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

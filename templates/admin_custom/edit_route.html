@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .admin-form-box {
+        background-color: #4e2a8e;
+        color: white;
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        max-width: 500px;
+        margin: 40px auto;
+    }
+    .admin-form-box input, .admin-form-box select {
+        width: 100%; padding: 12px; border-radius: 5px;
+        border: none; background-color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+    }
+    .admin-form-box label { font-weight: bold; margin-bottom: 5px; display: block; }
+</style>
+
+<div class="container">
+    <div class="admin-form-box">
+        <h3 class="text-center fw-bold"> Edit Route</h3>
+        <p class="text-center text-white-50">
+            {{ route.source.name }} ➝ {{ route.destination.name }}
+        </p>
+        <hr style="border-color: rgba(255,255,255,0.3);">
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            {% for field in form %}
+            <div class="mb-3">
+                <label>{{ field.label }}</label>
+                {{ field }}
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn btn-success w-100 fw-bold shadow mt-3">
+                Update Route
+            </button>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'admin_routes' %}" class="text-white text-decoration-none">Cancel</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

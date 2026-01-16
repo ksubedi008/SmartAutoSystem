@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* 1. Page Background & Centering */
+    .bill-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 20px;
+        min-height: 80vh;
+    }
+
+    /* 2. Modern Receipt Card */
+    .receipt-card {
+        background: #ffffff;
+        color: #1a1a2e;
+        width: 100%;
+        max-width: 450px;
+        border-radius: 25px;
+        overflow: hidden;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        position: relative;
+    }
+
+    /* 3. Top Header Section */
+    .receipt-header {
+        background: linear-gradient(135deg, #7d4efa, #6633cc);
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        position: relative;
+    }
+
+    .receipt-header i {
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+        opacity: 0.9;
+    }
+
+    .receipt-header h2 {
+        font-weight: 800;
+        letter-spacing: 1px;
+        margin-bottom: 5px;
+    }
+
+    /* 4. Dashed Ticket Divider */
+    .ticket-divider {
+        height: 2px;
+        border-top: 2px dashed #ddd;
+        margin: 20px 0;
+        position: relative;
+    }
+    .ticket-divider::before, .ticket-divider::after {
+        content: '';
+        position: absolute;
+        top: -10px;
+        width: 20px;
+        height: 20px;
+        background: #1a1a2e; /* Matches body background */
+        border-radius: 50%;
+    }
+    .ticket-divider::before { left: -40px; }
+    .ticket-divider::after { right: -40px; }
+
+    /* 5. Details Section */
+    .receipt-body {
+        padding: 10px 40px 30px 40px;
+    }
+
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .detail-label {
+        color: #777;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .detail-value {
+        color: #1a1a2e;
+        font-weight: 700;
+        text-align: right;
+    }
+
+    /* 6. Total Amount Section */
+    .total-container {
+        background: #f8f7ff;
+        border-radius: 15px;
+        padding: 20px;
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .total-label {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #7d4efa;
+    }
+
+    .total-amount {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a1a2e;
+    }
+
+    /* 7. Action Buttons */
+    .receipt-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 0 40px 40px 40px;
+    }
+
+    .btn-print {
+        background: #00d4ff;
+        color: white;
+        border: none;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-print:hover { background: #00b8e6; transform: scale(1.02); }
+
+    .btn-back-home {
+        text-align: center;
+        text-decoration: none;
+        color: #7d4efa;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: 0.3s;
+    }
+    .btn-back-home:hover { color: #1a1a2e; }
+
+    /* Print styling */
+    @media print {
+        .navbar, footer, .receipt-actions { display: none !important; }
+        body { background: white; }
+        .receipt-card { box-shadow: none; border: 1px solid #ddd; }
+    }
+</style>
+
+<div class="bill-page">
+    <div class="receipt-card">
+        <div class="receipt-header">
+            <i class="fas fa-check-circle"></i>
+            <h2>Payment Success</h2>
+            <p class="mb-0 opacity-75">Booking Reference: #{{ booking.id }}</p>
+        </div>
+
+        <div class="receipt-body">
+            <div class="detail-item">
+                <span class="detail-label">Passenger</span>
+                <span class="detail-value text-capitalize">{{ booking.passenger.username }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Driver</span>
+                <span class="detail-value text-capitalize">{{ booking.driver.username }}</span>
+            </div>
+
+            <div class="ticket-divider"></div>
+
+            <div class="detail-item">
+                <span class="detail-label">From</span>
+                <span class="detail-value">{{ booking.source.name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">To</span>
+                <span class="detail-value">{{ booking.destination.name }}</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Distance</span>
+                <span class="detail-value">{{ booking.actual_distance }} KM</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Fare Rate</span>
+                <span class="detail-value">Rs. 30 / KM</span>
+            </div>
+
+            <div class="total-container">
+                <span class="total-label">Total Paid</span>
+                <span class="total-amount">Rs. {{ booking.final_fare }}</span>
+            </div>
+        </div>
+
+        <div class="receipt-actions">
+            <button onclick="window.print()" class="btn-print">
+                <i class="fas fa-print me-2"></i> Print Receipt
+            </button>
+            
+            {% if user.role == 'DRIVER' %}
+                <a href="{% url 'driver_dashboard' %}" class="btn-back-home">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            {% elif user.role == 'ADMIN' or user.is_superuser %}
+                <a href="{% url 'admin_dashboard' %}" class="btn-back-home">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Admin
+                </a>
+            {% else %}
+                <a href="{% url 'passenger_dashboard' %}" class="btn-back-home">
+                    <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
