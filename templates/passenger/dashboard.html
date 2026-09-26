@@ -1,125 +1,23 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<style>
-    /* 1. Dashboard Container */
-    .dashboard-container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding-top: 30px;
-    }
-
-    /* 2. Welcome Card */
-    .welcome-card {
-        background: linear-gradient(135deg, rgba(78, 42, 142, 0.6), rgba(30, 20, 60, 0.8));
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-radius: 20px;
-        padding: 30px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 30px;
-        color: white;
-    }
-    .welcome-text h2 { font-weight: 800; margin-bottom: 5px; font-size: 1.8rem; }
-    .welcome-text p { color: #b8a6ff; margin: 0; font-size: 1rem; }
-
-    /* 3. Book Button */
-    .btn-book-ride {
-        background: linear-gradient(45deg, #00d4ff, #0056b3);
-        border: none;
-        color: white;
-        padding: 12px 30px;
-        font-size: 1.1rem;
-        font-weight: 700;
-        border-radius: 50px;
-        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
-        transition: transform 0.2s, box-shadow 0.2s;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-    }
-    .btn-book-ride:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0, 212, 255, 0.5);
-        color: white;
-    }
-
-    /* 4. Status Card (Live Ride) */
-    .status-card {
-        background: rgba(78, 42, 142, 0.4);
-        backdrop-filter: blur(15px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 25px;
-        margin-bottom: 30px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        color: white;
-        transition: all 0.3s ease;
-    }
+<div class="container py-4">
     
-    /* Dynamic Border Colors via Class instead of Inline Style */
-    .border-accepted { border-left: 5px solid #28a745; }
-    .border-pending { border-left: 5px solid #ffc107; }
-
-    /* 5. History Table */
-    .history-card {
-        background: rgba(255, 255, 255, 0.03);
-        border-radius: 20px;
-        padding: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .section-title {
-        color: white;
-        font-weight: 700;
-        margin-bottom: 20px;
-        display: flex;
-        align-items: center;
-        font-size: 1.4rem;
-    }
-    .section-title::before {
-        content: '';
-        display: inline-block;
-        width: 5px;
-        height: 25px;
-        background-color: #ffc107;
-        margin-right: 12px;
-        border-radius: 5px;
-    }
-    .table-custom { width: 100%; border-collapse: separate; border-spacing: 0 8px; color: white; }
-    .table-custom th { color: #b8a6ff; font-weight: 600; padding: 15px; text-transform: uppercase; font-size: 0.85rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .table-custom td { background: rgba(255, 255, 255, 0.05); padding: 15px; vertical-align: middle; }
-    .table-custom tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
-    .table-custom tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
-
-    /* 6. Empty State */
-    .empty-state {
-        text-align: center;
-        padding: 50px;
-        color: rgba(255, 255, 255, 0.5);
-        border: 2px dashed rgba(255, 255, 255, 0.1);
-        border-radius: 15px;
-    }
-    .empty-icon { font-size: 3rem; margin-bottom: 15px; opacity: 0.7; }
-</style>
-
-<div class="container dashboard-container">
-    
-    <div class="welcome-card">
-        <div class="welcome-text">
-            <h2>Hello, <span style="color: #ffc107;">{{ user.username }}</span>! </h2>
-            <p>Ready for your next journey?</p>
+    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary mb-4 p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h2 class="mb-1 fw-bold">Hello, <span class="text-warning">{{ user.username }}</span>!</h2>
+                <p class="mb-0 text-muted">Ready for your next journey?</p>
+            </div>
+            <div>
+                <a href="{% url 'book_ride' %}" class="btn btn-primary fw-bold rounded-pill px-4 py-2 shadow-sm">
+                    Book a ride
+                </a>
+            </div>
         </div>
-        <a href="{% url 'book_ride' %}" class="btn-book-ride">
-            Book a ride
-        </a>
     </div>
 
     {% if current_ride %}
-        <div class="status-card {% if current_ride.status == 'ACCEPTED' %}border-accepted{% else %}border-pending{% endif %}">
+        <div class="card shadow {% if current_ride.status == 'ACCEPTED' %}border-success bg-success-subtle text-success-emphasis{% else %}border-warning bg-warning-subtle text-warning-emphasis{% endif %} border-2 mb-4 rounded-4 p-4">
             
             <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                 <div>
@@ -130,25 +28,25 @@
                             Driver is coming!
                         {% endif %}
                     </h4>
-                    <p class="mb-0 text-white-50">
-                        Route: <span class="text-white fw-bold">{{ current_ride.source.name }} ➝ {{ current_ride.destination.name }}</span>
+                    <p class="mb-0">
+                        Route: <strong>{{ current_ride.source.name }} ➝ {{ current_ride.destination.name }}</strong>
                     </p>
                     
                     {% if current_ride.driver %}
-                        <div class="mt-2 p-2 rounded" style="background: rgba(40, 167, 69, 0.2); display: inline-block;">
-                            <p class="mb-0 text-white">
+                        <div class="mt-3 p-2 rounded bg-body shadow-sm">
+                            <p class="mb-0">
                                 Driver: <strong>{{ current_ride.driver.username }}</strong> 
                                 <span class="mx-2">|</span> 
-                                {{ current_ride.driver.phone_number }}
+                                <i class="fas fa-phone-alt me-1"></i> {{ current_ride.driver.phone_number }}
                             </p>
                         </div>
                     {% endif %}
                 </div>
 
                 <div class="text-end">
-                    <h3 class="fw-bold text-white mb-2">Rs. {{ current_ride.estimated_fare }}</h3>
+                    <h3 class="fw-bold mb-2">Rs. {{ current_ride.estimated_fare }}</h3>
                     <a href="{% url 'cancel_ride' current_ride.id %}" 
-                       class="btn btn-outline-danger rounded-pill btn-sm fw-bold px-3"
+                       class="btn btn-outline-danger rounded-pill btn-sm fw-bold px-3 shadow-sm"
                        onclick="return confirm('Are you sure you want to cancel this ride?');">
                         Cancel Ride
                     </a>
@@ -156,42 +54,42 @@
             </div>
             
             {% if current_ride.status == 'PENDING' %}
-            <div class="progress mt-3" style="height: 6px; background: rgba(255,255,255,0.1);">
-                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning" role="progressbar" style="width: 100%"></div>
+            <div class="progress mt-4" style="height: 8px;">
+                <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning w-100" role="progressbar"></div>
             </div>
-            <small class="text-white-50 mt-2 d-block">Please wait while we connect you to nearby drivers...</small>
+            <div class="form-text mt-2">Please wait while we connect you to nearby drivers...</div>
             {% endif %}
         </div>
     {% endif %}
 
-    <div class="history-card">
-        <h3 class="section-title">Your Ride History</h3>
+    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary p-4">
+        <h4 class="fw-bold mb-4"><i class="fas fa-history text-primary me-2"></i>Your Ride History</h4>
 
         {% if history %}
             <div class="table-responsive">
-                <table class="table-custom">
-                    <thead>
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light text-secondary text-uppercase small fw-bold">
                         <tr>
-                            <th>Date</th>
-                            <th>From</th>
-                            <th>To</th>
-                            <th>Fare</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th class="py-3">Date</th>
+                            <th class="py-3">From</th>
+                            <th class="py-3">To</th>
+                            <th class="py-3">Fare</th>
+                            <th class="py-3">Status</th>
+                            <th class="text-end py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for ride in history %}
                         <tr>
                             <td>{{ ride.created_at|date:"M d, Y" }}</td>
-                            <td>{{ ride.source.name }}</td>
-                            <td>{{ ride.destination.name }}</td>
+                            <td class="fw-bold">{{ ride.source.name }}</td>
+                            <td class="fw-bold">{{ ride.destination.name }}</td>
                             <td class="fw-bold text-warning">Rs. {{ ride.final_fare }}</td>
                             <td>
-                                <span class="badge bg-success">Completed</span>
+                                <span class="badge bg-success rounded-pill px-2 py-1 shadow-sm">Completed</span>
                             </td>
-                            <td>
-                                <a href="{% url 'view_bill' ride.id %}" class="btn btn-sm btn-outline-light rounded-pill px-3">View Bill</a>
+                            <td class="text-end">
+                                <a href="{% url 'view_bill' ride.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm">View Bill</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -199,10 +97,10 @@
                 </table>
             </div>
         {% else %}
-            <div class="empty-state">
-                <div class="empty-icon"></div>
-                <h5>No rides yet!</h5>
-                <p>Click the "Book a New Ride" button above to start your journey.</p>
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-map-marked-alt fa-3x mb-3 text-secondary"></i>
+                <h5 class="fw-bold">No rides yet!</h5>
+                <p class="mb-0">Click the "Book a ride" button above to start your journey.</p>
             </div>
         {% endif %}
     </div>

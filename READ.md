@@ -42,7 +42,7 @@ python -m venv venv
 Activate the environment so your terminal uses the local Python settings:
 DOS
 
-venv\Scripts\activate
+
 
 (You should see (venv) appear at the beginning of your command prompt line.)
 4. Install Dependencies
@@ -64,7 +64,7 @@ python manage.py migrate
 
 Run the project locally:
 DOS
-
+venv\Scripts\activate
 python manage.py runserver
 
 Access the site at: http://127.0.0.1:8000/

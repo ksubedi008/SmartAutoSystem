@@ -1,137 +1,32 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<style>
-    /* 1. Page Header Style */
-    .history-header {
-        margin-bottom: 30px;
-        padding: 20px;
-        background: linear-gradient(135deg, rgba(78, 42, 142, 0.4), rgba(30, 20, 60, 0.6));
-        border-radius: 20px;
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    /* 2. Glass Panel for Table */
-    .history-glass-panel {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        overflow: hidden;
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-    }
-
-    /* 3. Modern Table Styling */
-    .table-modern {
-        width: 100%;
-        color: #e0d4ff;
-        border-collapse: separate;
-        border-spacing: 0;
-    }
-
-    .table-modern th {
-        background: rgba(125, 78, 250, 0.2);
-        padding: 20px;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .table-modern td {
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.02);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        vertical-align: middle;
-    }
-
-    .table-modern tr:hover td {
-        background: rgba(255, 255, 255, 0.07);
-        transition: 0.3s ease;
-    }
-
-    /* 4. Custom Badges & Buttons */
-    .btn-bill-action {
-        background: rgba(0, 212, 255, 0.15);
-        color: #00d4ff !important;
-        border: 1px solid rgba(0, 212, 255, 0.3);
-        padding: 6px 18px;
-        border-radius: 50px;
-        font-weight: 600;
-        font-size: 0.85rem;
-        text-decoration: none;
-        transition: 0.3s;
-    }
-
-    .btn-bill-action:hover {
-        background: #00d4ff;
-        color: #1a1a2e !important;
-        transform: translateY(-2px);
-    }
-
-    .badge-completed {
-        background: rgba(40, 167, 69, 0.2);
-        color: #28a745;
-        border: 1px solid rgba(40, 167, 69, 0.3);
-        padding: 5px 12px;
-        border-radius: 50px;
-        font-size: 0.75rem;
-        font-weight: 700;
-    }
-
-    /* 5. Back Button (Matches Header Style) */
-    .btn-back-pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 12px 30px;
-        background: #7d4efa;
-        color: white !important;
-        border-radius: 50px;
-        font-weight: 700;
-        text-decoration: none;
-        margin-top: 25px;
-        box-shadow: 0 4px 15px rgba(125, 78, 250, 0.3);
-        transition: 0.3s;
-    }
-
-    .btn-back-pill:hover {
-        background: #6633cc;
-        transform: translateX(-5px);
-        box-shadow: 0 6px 20px rgba(125, 78, 250, 0.5);
-    }
-</style>
-
 <div class="container py-4">
-    <div class="history-header">
-        <h2 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-warning"></i>Trip History</h2>
-        <span class="badge bg-light text-dark rounded-pill px-3">{{ rides|length }} Total Trips</span>
+    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary mb-4 p-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <h2 class="mb-0 fw-bold"><i class="fas fa-history me-2 text-warning"></i>Trip History</h2>
+            <span class="badge bg-secondary rounded-pill px-3 py-2 fs-6 shadow-sm">{{ rides|length }} Total Trips</span>
+        </div>
     </div>
     
     {% if rides %}
-    <div class="history-glass-panel">
+    <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary p-0 overflow-hidden">
         <div class="table-responsive">
-            <table class="table-modern">
-                <thead>
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light text-secondary text-uppercase small fw-bold">
                     <tr>
-                        <th>Date</th>
-                        <th>Route</th>
-                        <th>{% if user.role == 'PASSENGER' %}Driver{% else %}Passenger{% endif %}</th>
-                        <th>Fare</th>
-                        <th class="text-end">Details</th>
+                        <th class="ps-4 py-3">Date</th>
+                        <th class="py-3">Route</th>
+                        <th class="py-3">{% if user.role == 'PASSENGER' %}Driver{% else %}Passenger{% endif %}</th>
+                        <th class="py-3">Fare</th>
+                        <th class="text-end pe-4 py-3">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for ride in rides %}
                     <tr>
-                        <td>
+                        <td class="ps-4">
                             <div class="fw-bold">{{ ride.created_at|date:"M d, Y" }}</div>
-                            <div class="small text-white-50">{{ ride.created_at|time:"h:i A" }}</div>
+                            <div class="small text-muted">{{ ride.created_at|time:"h:i A" }}</div>
                         </td>
                         <td>
                             <div class="fw-bold">{{ ride.source.name }}</div>
@@ -139,23 +34,23 @@
                             <div class="fw-bold">{{ ride.destination.name }}</div>
                         </td>
                         <td>
-                            <span class="text-capitalize">
+                            <span class="text-capitalize fw-bold">
                                 {% if user.role == 'PASSENGER' %}
-                                    <i class="fas fa-id-badge me-1"></i> {{ ride.driver.username }}
+                                    <i class="fas fa-id-badge text-muted me-1"></i> {{ ride.driver.username }}
                                 {% else %}
-                                    <i class="fas fa-user me-1"></i> {{ ride.passenger.username }}
+                                    <i class="fas fa-user text-muted me-1"></i> {{ ride.passenger.username }}
                                 {% endif %}
                             </span>
-                            <div class="small text-white-50">{{ ride.actual_distance }} km</div>
+                            <div class="small text-muted">{{ ride.actual_distance }} km</div>
                         </td>
                         <td>
                             <div class="fs-5 fw-bold text-success">Rs. {{ ride.final_fare }}</div>
                         </td>
-                        <td class="text-end">
-                            <a href="{% url 'view_bill' ride.id %}" class="btn-bill-action me-2">
+                        <td class="text-end pe-4">
+                            <a href="{% url 'view_bill' ride.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 shadow-sm me-2">
                                 <i class="fas fa-file-invoice me-1"></i> Bill
                             </a>
-                            <span class="badge-completed">COMPLETED</span>
+                            <span class="badge bg-success rounded-pill px-2 py-1 shadow-sm">COMPLETED</span>
                         </td>
                     </tr>
                     {% endfor %}
@@ -164,21 +59,21 @@
         </div>
     </div>
     {% else %}
-        <div class="glass-panel text-center py-5">
-            <i class="fas fa-car-side fa-4x text-white-50 mb-3"></i>
-            <h4 class="text-white-50">No completed trips found yet.</h4>
-            <p>Once you complete a ride, it will appear here.</p>
+        <div class="card shadow-sm border-0 rounded-4 bg-body-tertiary p-5 text-center text-muted">
+            <i class="fas fa-car-side fa-4x mb-3 text-secondary"></i>
+            <h4 class="fw-bold">No completed trips found yet.</h4>
+            <p class="mb-0">Once you complete a ride, it will appear here.</p>
         </div>
     {% endif %}
     
-    <div class="text-start">
+    <div class="mt-4">
         {% if user.role == 'PASSENGER' %}
-            <a href="{% url 'passenger_dashboard' %}" class="btn-back-pill">
-                <i class="fas fa-chevron-left me-2"></i> Dashboard
+            <a href="{% url 'passenger_dashboard' %}" class="btn btn-outline-secondary fw-bold rounded-pill px-4 shadow-sm">
+                <i class="fas fa-arrow-left me-2"></i> Dashboard
             </a>
         {% else %}
-            <a href="{% url 'driver_dashboard' %}" class="btn-back-pill">
-                <i class="fas fa-chevron-left me-2"></i> Dashboard
+            <a href="{% url 'driver_dashboard' %}" class="btn btn-outline-secondary fw-bold rounded-pill px-4 shadow-sm">
+                <i class="fas fa-arrow-left me-2"></i> Dashboard
             </a>
         {% endif %}
     </div>

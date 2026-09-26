@@ -1,32 +1,31 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container py-4">
     
-    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+    <div class="card shadow-sm border-0 rounded-4 overflow-hidden bg-body-tertiary">
         
-        <div class="card-header p-4 d-flex justify-content-between align-items-center" 
-             style="background: linear-gradient(90deg, #4e2a8e, #2d1b4d); border-bottom: 1px solid rgba(255,255,255,0.1);">
+        <div class="card-header p-4 d-flex justify-content-between align-items-center border-bottom bg-body-secondary">
             
-            <h3 class="mb-0 text-white fw-bold">
-                🚏 Route Management 
-                <span class="badge bg-warning text-dark fs-6 align-middle ms-2">{{ routes.count }} Routes</span>
+            <h3 class="mb-0 fw-bold">
+                <i class="fas fa-route text-success me-2"></i>Route Management 
+                <span class="badge bg-warning text-dark fs-6 align-middle ms-2 rounded-pill">{{ routes.count }} Routes</span>
             </h3>
             
             <div>
-                <a href="{% url 'admin_add_route' %}" class="btn btn-success fw-bold me-2 shadow-sm">
-                    + Add Route
+                <a href="{% url 'admin_add_route' %}" class="btn btn-success fw-bold me-2 shadow-sm rounded-pill px-3">
+                    <i class="fas fa-plus me-1"></i> Add Route
                 </a>
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-warning fw-bold shadow-sm">
-                    ← Back to Dashboard
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary fw-bold shadow-sm rounded-pill px-3">
+                    <i class="fas fa-arrow-left me-1"></i> Back
                 </a>
             </div>
         </div>
 
-        <div class="card-body p-0 bg-white">
+        <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover table-striped mb-0 align-middle">
-                    <thead class="bg-light text-secondary text-uppercase small fw-bold">
+                    <thead class="table-light text-secondary text-uppercase small fw-bold">
                         <tr>
                             <th class="ps-4 py-3">Source Location</th>
                             <th class="py-3">Destination</th>
@@ -37,19 +36,20 @@
                     <tbody>
                         {% for route in routes %}
                         <tr>
-                            <td class="ps-4 fw-bold text-dark">{{ route.source.name }}</td>
-                            <td class="text-dark">{{ route.destination.name }}</td>
+                            <td class="ps-4 fw-bold">{{ route.source.name }}</td>
+                            <td>{{ route.destination.name }}</td>
                             <td>
-                                <span class="badge bg-info text-dark">{{ route.distance_km }} km</span>
+                                <span class="badge bg-info text-dark shadow-sm px-2 py-1 rounded-pill">{{ route.distance_km }} km</span>
                             </td>
                             <td class="text-end pe-4">
-                                <a href="{% url 'admin_edit_route' route.id %}" class="btn btn-sm btn-outline-primary me-1">Edit</a>
-                                <a href="{% url 'admin_delete_route' route.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure you want to delete this route?');">Delete</a>
+                                <a href="{% url 'admin_edit_route' route.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3 me-1">Edit</a>
+                                <a href="{% url 'admin_delete_route' route.id %}" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="return confirm('Are you sure you want to delete this route?');">Delete</a>
                             </td>
                         </tr>
                         {% empty %}
                         <tr>
                             <td colspan="4" class="text-center py-5 text-muted">
+                                <div class="mb-3 text-secondary"><i class="fas fa-map-signs fa-3x"></i></div>
                                 <h5 class="fw-bold">No routes found</h5>
                                 <p class="mb-0">Click "Add Route" to create your first connection.</p>
                             </td>

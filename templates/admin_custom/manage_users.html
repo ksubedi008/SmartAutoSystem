@@ -1,173 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<style>
-    /* Glassmorphism Card Style */
-    .modern-table-card {
-        background: rgba(78, 42, 142, 0.4);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        border-radius: 20px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
-        overflow: hidden;
-        padding: 20px;
-        margin-top: 20px;
-    }
-
-    .table-modern {
-        width: 100%;
-        border-collapse: separate;
-        border-spacing: 0 10px;
-        color: white;
-    }
-
-    .table-modern thead th {
-        color: #b8a6ff;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 1px;
-        padding: 15px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .table-modern tbody tr {
-        background: rgba(255, 255, 255, 0.05);
-        transition: transform 0.2s, background 0.2s;
-    }
-
-    .table-modern tbody tr:hover {
-        background: rgba(255, 255, 255, 0.1);
-        transform: scale(1.01);
-    }
-
-    .table-modern td {
-        padding: 15px;
-        vertical-align: middle;
-        font-weight: 500;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-    }
+<div class="container py-4">
     
-    .table-modern tbody tr td:first-child { border-top-left-radius: 10px; border-bottom-left-radius: 10px; }
-    .table-modern tbody tr td:last-child { border-top-right-radius: 10px; border-bottom-right-radius: 10px; }
-
-    /* Role Badges */
-    .badge-role {
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    .badge-driver { background-color: #ffc107; color: #1a1a2e; box-shadow: 0 0 10px rgba(255, 193, 7, 0.4); }
-    .badge-passenger { background-color: #00d4ff; color: #00334e; box-shadow: 0 0 10px rgba(0, 212, 255, 0.4); }
-
-    /* Action Buttons */
-    .btn-icon {
-        width: 35px;
-        height: 35px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 8px;
-        color: white;
-        transition: all 0.3s ease;
-        text-decoration: none;
-        margin-left: 5px;
-    }
-    
-    /* NEW: History Button Style */
-    .btn-history { background: rgba(111, 66, 193, 0.2); color: #a06ee1; border: 1px solid rgba(111, 66, 193, 0.3); }
-    .btn-history:hover { background: #6f42c1; color: white; }
-
-    .btn-edit { background: rgba(0, 123, 255, 0.2); color: #4dabf7; border: 1px solid rgba(0, 123, 255, 0.3); }
-    .btn-edit:hover { background: #007bff; color: white; }
-
-    .btn-delete { background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border: 1px solid rgba(220, 53, 69, 0.3); }
-    .btn-delete:hover { background: #dc3545; color: white; }
-
-    .page-header-custom {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        color: white;
-    }
-    .back-btn {
-        color: #b8a6ff;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-flex;
-        align-items: center;
-    }
-    .back-btn:hover { color: #ffc107; text-decoration: underline; }
-
-</style>
-
-<div class="container" style="max-width: 900px; padding-top: 40px;">
-    
-    <div class="page-header-custom">
-        <h2 class="fw-bold m-0">👥 User Management</h2>
-        <a href="{% url 'admin_dashboard' %}" class="back-btn">
-            ← Back to Dashboard
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold m-0"><i class="fas fa-users text-primary me-2"></i>User Management</h2>
+        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill">
+            <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
         </a>
     </div>
 
-    <div class="modern-table-card">
-        <table class="table-modern">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Phone</th>
-                    <th class="text-end">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>
-                        <div class="d-flex align-items-center">
-                            <div style="width: 35px; height: 35px; background: rgba(255,255,255,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 12px; font-weight: bold; color: #ffc107;">
-                                {{ user.username|slice:":1"|upper }}
-                            </div>
-                            <span class="fw-bold">{{ user.username }}</span>
-                        </div>
-                    </td>
-                    <td>
-                        {% if user.role == 'DRIVER' %}
-                            <span class="badge-role badge-driver">Driver</span>
-                        {% else %}
-                            <span class="badge-role badge-passenger">Passenger</span>
-                        {% endif %}
-                    </td>
-                    <td style="font-family: monospace; font-size: 0.95rem; color: #d1d1d1;">
-                        {{ user.phone_number }}
-                    </td>
-                    <td class="text-end">
-                        <a href="{% url 'admin_user_history' user.id %}" class="btn-icon btn-history" title="View History & Bills">
-                            Bills
-                        </a>
-                        
-                        <a href="{% url 'admin_edit_user' user.id %}" class="btn-icon btn-edit" title="Edit">
-                            Edit
-                        </a>
-                        <a href="{% url 'admin_delete_user' user.id %}" class="btn-icon btn-delete" title="Delete" onclick="return confirm('Are you sure you want to delete {{ user.username }}?');">
-                            Delete
-                        </a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center py-5 text-muted">
-                        No users found other than superusers.
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <div class="card shadow-sm border-0 bg-body-tertiary">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover table-striped mb-0 align-middle">
+                    <thead class="table-light text-uppercase small fw-bold">
+                        <tr>
+                            <th class="ps-4 py-3">Username</th>
+                            <th class="py-3">Role</th>
+                            <th class="py-3">Phone</th>
+                            <th class="text-end pe-4 py-3">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning text-dark fw-bold rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 35px; height: 35px;">
+                                        {{ user.username|slice:":1"|upper }}
+                                    </div>
+                                    <span class="fw-bold">{{ user.username }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                {% if user.role == 'DRIVER' %}
+                                    <span class="badge bg-warning text-dark shadow-sm px-3 py-2 rounded-pill">DRIVER</span>
+                                {% else %}
+                                    <span class="badge bg-info text-dark shadow-sm px-3 py-2 rounded-pill">PASSENGER</span>
+                                {% endif %}
+                            </td>
+                            <td class="font-monospace text-muted">
+                                {{ user.phone_number|default:"-" }}
+                            </td>
+                            <td class="text-end pe-4">
+                                <a href="{% url 'admin_user_history' user.id %}" class="btn btn-sm btn-outline-primary rounded-pill px-3" title="View History & Bills">
+                                    <i class="fas fa-file-invoice"></i> Bills
+                                </a>
+                                
+                                <a href="{% url 'admin_edit_user' user.id %}" class="btn btn-sm btn-outline-secondary ms-1 rounded-pill px-3" title="Edit">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                
+                                <a href="{% url 'admin_delete_user' user.id %}" class="btn btn-sm btn-outline-danger ms-1 rounded-pill px-3" title="Delete" onclick="return confirm('Are you sure you want to delete {{ user.username }}?');">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                No users found other than superusers.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -1,158 +1,42 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<style>
-    /* 1. Centered Wrapper */
-    .complete-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 85vh;
-        padding: 20px;
-    }
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm bg-body-tertiary border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <h2 class="text-center fw-bold mb-4">Finish Ride</h2>
 
-    /* 2. The Glass Card */
-    .complete-card {
-        background: rgba(78, 42, 142, 0.4); /* Translucent Purple */
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        padding: 40px;
-        border-radius: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        width: 100%;
-        max-width: 500px;
-        color: white;
-        text-align: center;
-    }
+                    <div class="card shadow-sm border-start border-info border-5 bg-body-secondary mb-4 p-3">
+                        <div class="mb-2">
+                            <span class="text-muted small fw-bold text-uppercase d-block">Passenger</span>
+                            <span class="fw-bold fs-5">{{ booking.passenger.username }}</span>
+                        </div>
+                        <div class="mb-2">
+                            <span class="text-muted small fw-bold text-uppercase d-block">Route</span>
+                            <span class="fw-bold fs-5">{{ booking.source.name }} ➝ {{ booking.destination.name }}</span>
+                        </div>
+                        <div>
+                            <span class="text-muted small fw-bold text-uppercase d-block">Estimated Fare</span>
+                            <span class="fw-bold fs-5 text-warning">Rs. {{ booking.estimated_fare }}</span>
+                        </div>
+                    </div>
 
-    .page-title {
-        font-weight: 800;
-        font-size: 1.8rem;
-        margin-bottom: 25px;
-        letter-spacing: -0.5px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-    }
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-4 text-start">
+                            <label class="form-label fw-bold">Actual Distance (km)</label>
+                            <input type="number" step="0.1" name="actual_distance" class="form-control form-control-lg" placeholder="e.g. 5.5" required>
+                            <div class="form-text mt-2">* Enter the exact reading from your odometer</div>
+                        </div>
 
-    /* 3. Trip Summary "Ticket" */
-    .trip-summary {
-        background: rgba(255, 255, 255, 0.05);
-        border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 30px;
-        text-align: left;
-        border-left: 5px solid #00d4ff; /* Cyan accent */
-    }
-
-    .summary-item {
-        margin-bottom: 8px;
-        font-size: 0.95rem;
-    }
-    .summary-label {
-        color: #b8a6ff;
-        font-weight: 600;
-        text-transform: uppercase;
-        font-size: 0.75rem;
-        display: block;
-        margin-bottom: 2px;
-    }
-    .summary-value {
-        font-weight: 700;
-        font-size: 1.1rem;
-    }
-
-    /* 4. Input Styling */
-    .form-group {
-        text-align: left;
-        margin-bottom: 25px;
-    }
-    
-    label {
-        color: #e0d4ff;
-        font-weight: 700;
-        margin-bottom: 10px;
-        display: block;
-    }
-
-    input.form-control {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border: 2px solid rgba(255, 255, 255, 0.1) !important;
-        color: white !important;
-        padding: 15px;
-        border-radius: 12px;
-        width: 100%;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-    }
-
-    input.form-control:focus {
-        background: rgba(255, 255, 255, 0.15) !important;
-        border-color: #28a745 !important; /* Green glow */
-        box-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
-        outline: none;
-    }
-
-    /* 5. Action Button */
-    .btn-finish {
-        width: 100%;
-        padding: 16px;
-        background: linear-gradient(45deg, #28a745, #218838); /* Green Gradient */
-        border: none;
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 800;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 10px 20px rgba(40, 167, 69, 0.3);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-
-    .btn-finish:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(40, 167, 69, 0.5);
-    }
-</style>
-
-<div class="complete-wrapper">
-    <div class="complete-card">
-        
-        <h2 class="page-title">Finish Ride</h2>
-
-        <div class="trip-summary">
-            <div class="summary-item">
-                <span class="summary-label">Passenger</span>
-                <span class="summary-value">{{ booking.passenger.username }}</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Route</span>
-                <span class="summary-value">{{ booking.source.name }} ➝ {{ booking.destination.name }}</span>
-            </div>
-            <div class="summary-item">
-                <span class="summary-label">Estimated Fare</span>
-                <span class="summary-value text-warning">Rs. {{ booking.estimated_fare }}</span>
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-3 rounded-3 shadow-sm text-uppercase">
+                            Calculate Bill & Finish
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
-
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label>Actual Distance (km)</label>
-                <input type="number" step="0.1" name="actual_distance" class="form-control" placeholder="e.g. 5.5" required>
-                <small class="text-white-50 mt-2 d-block">
-                    * Enter the exact reading from your odometer
-                </small>
-            </div>
-
-            <button type="submit" class="btn-finish">
-                Calculate Bill & Finish
-            </button>
-        </form>
     </div>
 </div>
 {% endblock %}

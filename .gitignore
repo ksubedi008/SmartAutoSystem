@@ -1,5 +1,27 @@
-venv/
-*.pyc
-__pycache__/
+# Environment variables and secrets
+.env
+.env.local
+*.env
+
+# Database
+*.sqlite3
 db.sqlite3
+
+# Python & Virtual Environments
+venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Static collected files & Media uploads
+/staticfiles/
+/media/
+
+# IDE & OS files
+.vscode/
+.idea/
+*.swp
 .DS_Store
+Thumbs.db

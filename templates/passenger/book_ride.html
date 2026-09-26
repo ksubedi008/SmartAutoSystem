@@ -1,168 +1,49 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<style>
-    /* 1. Centered Glass Wrapper */
-    .booking-wrapper {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 85vh;
-        padding: 20px;
-    }
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-5">
+            <div class="card shadow-sm bg-body-tertiary border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <h2 class="text-center fw-bold mb-4">Book Your Auto</h2>
 
-    /* 2. The Glass Card */
-    .booking-card {
-        background: rgba(78, 42, 142, 0.4); /* Translucent Purple */
-        backdrop-filter: blur(15px);        /* Frosted Glass */
-        -webkit-backdrop-filter: blur(15px);
-        padding: 40px;
-        border-radius: 24px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        width: 100%;
-        max-width: 500px;
-        color: white;
-        text-align: center;
-    }
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold">Pickup Location</label>
+                            <select name="source" class="form-select form-select-lg" required>
+                                <option value="" selected disabled>Select Pickup Point...</option>
+                                {% for location in locations %}
+                                    <option value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    /* 3. Typography */
-    .booking-title {
-        font-weight: 800;
-        font-size: 1.8rem;
-        margin-bottom: 30px;
-        letter-spacing: -0.5px;
-    }
+                        <div class="mb-4 text-start">
+                            <label class="form-label fw-bold">Drop Location</label>
+                            <select name="destination" class="form-select form-select-lg" required>
+                                <option value="" selected disabled>Select Destination...</option>
+                                {% for location in locations %}
+                                    <option value="{{ location.id }}">{{ location.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-    /* 4. Custom Dropdowns (Dark & Modern) */
-    .form-group {
-        margin-bottom: 25px;
-        text-align: left;
-    }
-    
-    label {
-        color: #b8a6ff;
-        font-size: 0.85rem;
-        font-weight: 700;
-        margin-bottom: 10px;
-        display: block;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+                        <div class="alert alert-warning border-warning border-2 rounded-3 text-center mb-4">
+                            Standard Rate: <strong class="fs-5">Rs. 30 per km</strong>
+                        </div>
 
-    select.form-control {
-        appearance: none;
-        -webkit-appearance: none;
-        background-color: rgba(255, 255, 255, 0.1) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-        padding: 15px;
-        border-radius: 12px;
-        width: 100%;
-        cursor: pointer;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 1rem center;
-        background-size: 1.2em;
-        transition: all 0.3s ease;
-    }
-
-    select.form-control:focus {
-        background-color: rgba(255, 255, 255, 0.15) !important;
-        border-color: #00d4ff !important;
-        box-shadow: 0 0 15px rgba(0, 212, 255, 0.3);
-        outline: none;
-    }
-
-    /* Force options to be dark (Fixes white list issue) */
-    select option {
-        background-color: #1a1a2e;
-        color: white;
-        padding: 10px;
-    }
-
-    /* 5. Rate Info Badge */
-    .rate-badge {
-        background: rgba(255, 193, 7, 0.15); /* Low opacity yellow */
-        color: #ffc107;
-        border: 1px solid rgba(255, 193, 7, 0.3);
-        padding: 12px;
-        border-radius: 10px;
-        font-weight: 600;
-        margin-bottom: 30px;
-        display: block;
-    }
-
-    /* 6. Buttons */
-    .btn-find-driver {
-        width: 100%;
-        padding: 16px;
-        background: linear-gradient(45deg, #00d4ff, #0056b3);
-        border: none;
-        color: white;
-        font-size: 1.1rem;
-        font-weight: 800;
-        border-radius: 12px;
-        cursor: pointer;
-        transition: transform 0.2s, box-shadow 0.2s;
-        box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
-    }
-    .btn-find-driver:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(0, 212, 255, 0.5);
-    }
-
-    .btn-cancel {
-        display: block;
-        margin-top: 20px;
-        color: rgba(255, 255, 255, 0.6);
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.3s;
-    }
-    .btn-cancel:hover {
-        color: #ff6b6b;
-    }
-</style>
-
-<div class="booking-wrapper">
-    <div class="booking-card">
-        
-        <div class="booking-title">Book Your Auto</div>
-
-        <form method="POST">
-            {% csrf_token %}
-            
-            <div class="form-group">
-                <label>Pickup Location</label>
-                <select name="source" class="form-control" required>
-                    <option value="" selected disabled>Select Pickup Point...</option>
-                    {% for location in locations %}
-                        <option value="{{ location.id }}">{{ location.name }}</option>
-                    {% endfor %}
-                </select>
+                        <button type="submit" class="btn btn-primary w-100 fw-bold py-3 rounded-3 shadow-sm text-uppercase mb-3">
+                            Find Driver Now
+                        </button>
+                        
+                        <div class="text-center">
+                            <a href="{% url 'passenger_dashboard' %}" class="text-muted fw-bold text-decoration-none">Cancel</a>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label>Drop Location</label>
-                <select name="destination" class="form-control" required>
-                    <option value="" selected disabled>Select Destination...</option>
-                    {% for location in locations %}
-                        <option value="{{ location.id }}">{{ location.name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-
-            <div class="rate-badge">
-                Standard Rate: <strong>Rs. 30 per km</strong>
-            </div>
-
-            <button type="submit" class="btn-find-driver">
-                Find Driver Now
-            </button>
-            
-            <a href="{% url 'passenger_dashboard' %}" class="btn-cancel">Cancel</a>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock %}

@@ -2,206 +2,87 @@
 {% load static %}
 
 {% block content %}
-<style>
-    /* --- HERO SECTION --- */
-    .hero-section {
-        min-height: 80vh; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        overflow: hidden;
-        padding: 60px 0;
-    }
-
-    /* Animated Background Blob */
-    .hero-blob {
-        position: absolute;
-        width: 600px;
-        height: 600px;
-        background: radial-gradient(circle, rgba(255, 193, 7, 0.15) 0%, rgba(30, 20, 60, 0) 70%);
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: -1;
-        animation: pulse 4s infinite alternate;
-    }
-
-    @keyframes pulse {
-        0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-        100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
-    }
-
-    /* Typography */
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 800;
-        line-height: 1.1;
-        margin-bottom: 20px;
-        color: white;
-    }
-    .text-gradient {
-        background: linear-gradient(45deg, #ffc107, #ff9800);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    
-    .hero-subtitle {
-        font-size: 1.2rem;
-        color: rgba(255, 255, 255, 0.7);
-        margin-bottom: 40px;
-        max-width: 500px;
-    }
-
-    /* Hero Buttons */
-    .btn-hero-primary {
-        padding: 15px 40px;
-        background: linear-gradient(45deg, #ffc107, #ff9800);
-        color: #1a1a2e;
-        border: none;
-        border-radius: 50px;
-        font-weight: 800;
-        font-size: 1.1rem;
-        transition: transform 0.3s, box-shadow 0.3s;
-        text-decoration: none;
-        display: inline-block;
-        box-shadow: 0 10px 30px rgba(255, 193, 7, 0.3);
-    }
-    .btn-hero-primary:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 40px rgba(255, 193, 7, 0.5);
-        color: #1a1a2e;
-    }
-
-    .btn-hero-outline {
-        padding: 13px 40px;
-        background: transparent;
-        color: white;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 1.1rem;
-        transition: all 0.3s;
-        text-decoration: none;
-        display: inline-block;
-        margin-left: 15px;
-    }
-    .btn-hero-outline:hover {
-        border-color: #ffc107;
-        color: #ffc107;
-        background: rgba(255, 193, 7, 0.05);
-    }
-
-    /* Floating Image Animation */
-    .hero-img-container {
-        animation: float 6s ease-in-out infinite;
-        text-align: center;
-    }
-    @keyframes float {
-        0% { transform: translateY(0px); }
-        50% { transform: translateY(-20px); }
-        100% { transform: translateY(0px); }
-    }
-
-    /* --- FEATURES SECTION --- */
-    .features-row {
-        margin-top: -50px; 
-        margin-bottom: 80px;
-        position: relative;
-        z-index: 2;
-    }
-    .feature-card {
-        background: rgba(255, 255, 255, 0.03);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px;
-        padding: 30px;
-        text-align: center;
-        transition: transform 0.3s;
-        height: 100%;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-    .feature-card:hover {
-        transform: translateY(-10px);
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(255, 255, 255, 0.2);
-    }
-    .feature-icon {
-        font-size: 2.5rem;
-        margin-bottom: 20px;
-    }
-    .feature-title { font-weight: 700; margin-bottom: 10px; color: white; font-size: 1.2rem; }
-    .feature-desc { color: rgba(255, 255, 255, 0.6); font-size: 0.95rem; line-height: 1.6; }
-
-</style>
-
-<div class="container hero-section">
-    <div class="hero-blob"></div> <div class="row align-items-center w-100">
-        
-        <div class="col-lg-6">
-            <h1 class="hero-title">
+<!-- HERO SECTION -->
+<div class="container py-5">
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-lg-6 text-center text-lg-start">
+            <h1 class="display-3 fw-bold lh-1 mb-3">
                 The Smartest Way <br>
-                to Catch an <span class="text-gradient">Auto.</span>
+                to Catch an <span class="text-warning">Auto.</span>
             </h1>
-            <p class="hero-subtitle">
+            <p class="lead text-muted mb-4">
                 Skip the bargaining. Book a ride from your phone, track your driver, and travel safely across the city.
             </p>
             
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center justify-content-lg-start">
                 {% if user.is_authenticated %}
                     {% if user.role == 'PASSENGER' %}
-                        <a href="{% url 'book_ride' %}" class="btn-hero-primary">Book a Ride 🛺</a>
+                        <a href="{% url 'book_ride' %}" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm px-4">Book a Ride 🛺</a>
                     {% elif user.role == 'DRIVER' %}
-                        <a href="{% url 'driver_dashboard' %}" class="btn-hero-primary">Go to Dashboard</a>
+                        <a href="{% url 'driver_dashboard' %}" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm px-4">Go to Dashboard</a>
                     {% else %}
-                        <a href="{% url 'admin_dashboard' %}" class="btn-hero-primary">Admin Panel</a>
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm px-4">Admin Panel</a>
                     {% endif %}
                 {% else %}
-                    <a href="{% url 'login' %}" class="btn-hero-primary">Login to Book</a>
-                    <a href="{% url 'register' %}" class="btn-hero-outline">Sign Up as Passenger</a>
+                    <a href="{% url 'login' %}" class="btn btn-warning btn-lg rounded-pill fw-bold shadow-sm px-4">Login to Book</a>
+                    <a href="{% url 'register' %}" class="btn btn-outline-secondary btn-lg rounded-pill fw-bold px-4">Sign Up as Passenger</a>
                 {% endif %}
             </div>
         </div>
 
-        <div class="col-lg-6 hero-img-container mt-5 mt-lg-0">
-            <i class="fas fa-taxi" 
-               style="font-size: 14rem; 
-                      background: linear-gradient(45deg, #ffc107, #ff9800); 
-                      -webkit-background-clip: text; 
-                      -webkit-text-fill-color: transparent; 
-                      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.5));">
-            </i>
+        <div class="col-lg-6 text-center">
+            <i class="fas fa-taxi text-warning" style="font-size: 12rem; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));"></i>
         </div>
     </div>
 </div>
 
-<div class="container features-row">
+<!-- FEATURES SECTION -->
+<div class="container pb-5">
     <div class="row g-4">
+        <!-- Feature 1 -->
         <div class="col-md-4">
-            <div class="feature-card">
-                <div class="feature-icon" style="color: #00d4ff;"><i class="fas fa-bolt"></i></div>
-                <h4 class="feature-title">Fast Booking</h4>
-                <p class="feature-desc">Get an auto in minutes. No more waiting at the stand or waving hands in traffic.</p>
+            <div class="card h-100 p-4 border-0 shadow-sm hover-shadow bg-body-tertiary">
+                <div class="card-body text-center">
+                    <div class="text-info mb-3">
+                        <i class="fas fa-bolt fa-3x"></i>
+                    </div>
+                    <h4 class="card-title fw-bold">Fast Booking</h4>
+                    <p class="card-text text-muted">
+                        Get an auto in minutes. No more waiting at the stand or waving hands in traffic.
+                    </p>
+                </div>
             </div>
         </div>
         
+        <!-- Feature 2 -->
         <div class="col-md-4">
-            <div class="feature-card">
-                <div class="feature-icon" style="color: #ffc107;"><i class="fas fa-wallet"></i></div>
-                <h4 class="feature-title">Transparent Pricing</h4>
-                <p class="feature-desc">Know the fare before you ride. Standard rate of Rs. 30/km with no hidden charges.</p>
+            <div class="card h-100 p-4 border-0 shadow-sm hover-shadow bg-body-tertiary">
+                <div class="card-body text-center">
+                    <div class="text-warning mb-3">
+                        <i class="fas fa-wallet fa-3x"></i>
+                    </div>
+                    <h4 class="card-title fw-bold">Transparent Pricing</h4>
+                    <p class="card-text text-muted">
+                        Know the fare before you ride. Standard rate of Rs. 30/km with no hidden charges.
+                    </p>
+                </div>
             </div>
         </div>
         
+        <!-- Feature 3 -->
         <div class="col-md-4">
-            <div class="feature-card">
-                <div class="feature-icon" style="color: #28a745;"><i class="fas fa-shield-alt"></i></div>
-                <h4 class="feature-title">Secure Rides</h4>
-                <p class="feature-desc">Verified drivers and real-time trip tracking ensure you reach your destination safely.</p>
+            <div class="card h-100 p-4 border-0 shadow-sm hover-shadow bg-body-tertiary">
+                <div class="card-body text-center">
+                    <div class="text-success mb-3">
+                        <i class="fas fa-shield-alt fa-3x"></i>
+                    </div>
+                    <h4 class="card-title fw-bold">Secure Rides</h4>
+                    <p class="card-text text-muted">
+                        Verified drivers and real-time trip tracking ensure you reach your destination safely.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
 {% endblock %}

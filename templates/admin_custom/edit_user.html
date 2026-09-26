@@ -1,74 +1,39 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<style>
-    .admin-form-box {
-        background-color: #4e2a8e;
-        color: white;
-        padding: 40px;
-        border-radius: 15px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-        max-width: 600px;
-        margin: 40px auto;
-    }
-    
-    .admin-form-box input, 
-    .admin-form-box select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 5px;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        background-color: rgba(255, 255, 255, 0.9);
-        color: #333;
-    }
-    
-    .admin-form-box label {
-        font-weight: bold;
-        margin-bottom: 5px;
-        margin-top: 10px;
-        display: block;
-    }
-    
-    .helptext {
-        font-size: 0.8em;
-        color: #ddd;
-        display: block;
-        margin-top: 2px;
-    }
-</style>
-
-<div class="container">
-    <div class="admin-form-box">
-        <h3 class="text-center fw-bold"> Edit User Details</h3>
-        <p class="text-center text-white-50">Updating: {{ user_obj.username }}</p>
-        <hr style="border-color: rgba(255,255,255,0.3);">
-        
-        <form method="POST">
-            {% csrf_token %}
-            
-            {% for field in form %}
-            <div class="mb-3">
-                <label>{{ field.label }}</label>
-                {{ field }}
-                {% if field.help_text %}
-                    <small class="helptext">{{ field.help_text }}</small>
-                {% endif %}
-                {% if field.errors %}
-                    <div class="text-warning small fw-bold mt-1">{{ field.errors.0 }}</div>
-                {% endif %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm bg-body-tertiary border-0 rounded-4 p-4">
+                <div class="card-body">
+                    <h3 class="text-center fw-bold mb-1">Edit User Details</h3>
+                    <p class="text-center text-muted mb-4">Updating: {{ user_obj.username }}</p>
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% for field in form %}
+                        <div class="mb-3 text-start">
+                            <label class="form-label fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="form-text small">{{ field.help_text|safe }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger small mt-1 fw-bold">{{ field.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-success w-100 fw-bold py-2 rounded-3 shadow-sm mt-4">Save Changes</button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'admin_manage_users' %}" class="text-decoration-none fw-bold text-muted">Cancel</a>
+                    </div>
+                </div>
             </div>
-            {% endfor %}
-
-            <button type="submit" class="btn btn-success w-100 fw-bold shadow mt-4">
-                Save Changes
-            </button>
-        </form>
-        
-        <div class="text-center mt-3">
-            <a href="{% url 'admin_manage_users' %}" class="text-white text-decoration-none">
-                Cancel
-            </a>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('input, select, textarea').forEach(function(el) { el.classList.add('form-control'); });
+    });
+</script>
 {% endblock %}
