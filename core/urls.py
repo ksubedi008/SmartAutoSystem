@@ -43,4 +43,8 @@ urlpatterns = [
     path('admin-user-history/<int:user_id>/', views.admin_user_history, name='admin_user_history'),
     path('admin-edit-user/<int:user_id>/', views.admin_edit_user, name='admin_edit_user'),
     path('cancel-ride/<int:booking_id>/', views.cancel_ride, name='cancel_ride'),
+    
+    # Static Info Pages
+    path('terms/', views.terms, name='terms'),
+    path('privacy/', views.privacy, name='privacy'),
 ]

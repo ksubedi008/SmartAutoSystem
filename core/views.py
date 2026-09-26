@@ -340,3 +340,9 @@ def route_list(request):
     all_routes = Route.objects.all().order_by('source__name', 'destination__name')
     context = {'routes': all_routes}
     return render(request, 'admin_custom/routes.html', context)
+
+def terms(request):
+    return render(request, 'terms.html')
+
+def privacy(request):
+    return render(request, 'privacy.html')
